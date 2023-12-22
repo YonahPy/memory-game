@@ -1,19 +1,12 @@
 <template>
 <div class="card">
-		<div class="card__inner">
+		<div class="card__inner" :class="{'is-flipped': isFlipped}" @click="turnCard">
 			<div class="card__face card__face--front">
-				<h2>Card Front</h2>
+				
 			</div>
 			<div class="card__face card__face--back">
-				<div class="card__content">
-					<div class="card__header">
-						<img src="" alt="" class="pp" />
-						<h2>Tyler Potts</h2>
-					</div>
-					<div class="card__body">
-						<h3>JavaScript Wizard</h3>
-						<p>Lorem ipsum <strong>dolor</strong> sit amet, consectetur <strong>adipiscing</strong> elit. Sed id erat a magna lobortis dictum. Nunc est arcu, <strong>lacinia</strong> quis sapien placerat, <strong>laoreet</strong> tincidunt nulla.</p>
-					</div>
+				<div class="card__content" :style="{backgroundImage: `url(${urlImage})`}">
+					<p>{{ characterName }}</p>
 				</div>
 			</div>
 		</div>
@@ -21,11 +14,18 @@
 </template>
 
 <script setup lang="ts">
-const card = document.querySelector(".card__inner");
+import { ref } from 'vue';
 
-//card.addEventListener("click", function (e) {
- // card.classList.toggle('is-flipped');
-//});
+const prop = defineProps({
+    urlImage: {type: String, required: true},
+    characterName: {type: String, required: true},
+
+})
+
+let isFlipped = ref<boolean>(false)
+function turnCard(){
+    isFlipped.value = !isFlipped.value
+}
 </script>
 
 <style>
@@ -41,16 +41,11 @@ const card = document.querySelector(".card__inner");
   padding: 0;
 }
 
-body {
-  font-family: montserrat, sans-serif;
-  width: 100%;
-  min-height: 100vh;
-}
 
 .card {
   margin: 100px auto 0;
-  width: 400px;
-  height: 600px;
+  width: 100px;
+  height: 150px;
   perspective: 1000px;
 }
 
@@ -80,15 +75,15 @@ body {
 }
 
 .card__face--front {
-  background-image: linear-gradient(to bottom right, var(--primary), var(--secondary));
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background-size: cover;
+  background-image: url('../assets/images/dark-souls-3-cinder.jpg');
+ 
 }
 
 .card__face--front h2 {
   color: #FFF;
-  font-size: 32px;
+  font-size: 20px;
+  padding-inline: 10px;
 }
 
 .card__face--back {
@@ -99,59 +94,16 @@ body {
 .card__content {
   width: 100%;
   height: 100%;
+  background-size: cover;
+  display: flex;
+  align-items: end;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+.card__content p{
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    color: white;
+    
 }
 
-.card__header {
-  position: relative;
-  padding: 30px 30px 40px;
-}
-
-.card__header:after {
-  content: '';
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: linear-gradient(to bottom left, var(--primary) 10%, var(--secondary) 115%);
-  z-index: -1;
-  border-radius: 0px 0px 50% 0px;
-}
-
-.pp {
-  display: block;
-  width: 128px;
-  height: 128px;
-  margin: 0 auto 30px;
-  border-radius: 50%;
-  background-color: #FFF;
-  border: 5px solid #FFF;
-  object-fit: cover;
-}
-
-.card__header h2 {
-  color: #FFF;
-  font-size: 32px;
-  font-weight: 900;
-  text-transform: uppercase;
-  text-align: center;
-}
-
-.card__body {
-  padding: 30px;
-}
-
-.card__body h3 {
-  color: var(--dark);
-  font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 15px;
-}
-
-.card__body p {
-  color: var(--dark);
-  font-size: 18px;
-  line-height: 1.4;
-}
 </style>
