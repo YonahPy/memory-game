@@ -19,12 +19,20 @@ import { ref } from 'vue';
 const prop = defineProps({
     urlImage: {type: String, required: true},
     characterName: {type: String, required: true},
-
+    matched: {type: Boolean}
 })
-
 let isFlipped = ref<boolean>(false)
+
+const emit = defineEmits<{
+  clickedCard: [isFlipped: boolean]
+}>()
+
 function turnCard(){
     isFlipped.value = !isFlipped.value
+    emit('clickedCard', isFlipped.value)
+    if(!prop.matched){
+      isFlipped.value = false
+    }
 }
 </script>
 
@@ -43,10 +51,10 @@ function turnCard(){
 
 
 .card {
-  margin: 100px auto 0;
   width: 100px;
   height: 150px;
   perspective: 1000px;
+  
 }
 
 .card__inner {
@@ -97,12 +105,16 @@ function turnCard(){
   background-size: cover;
   display: flex;
   align-items: end;
-    justify-content: center;
-    margin-bottom: 10px;
+  margin-bottom: 10px;
+  
 }
 .card__content p{
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     color: white;
+    font-size: 12px;
+    font-weight: bold;
+    padding-left: 15px;
+    padding-bottom: 5px;
     
 }
 
