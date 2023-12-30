@@ -2,7 +2,7 @@
   <main>
     <section>
     
-      <Card v-for="item in shuffledCards" :key="item.id" :character-name="item.characterName"  :url-image="item.urlImage" @clicked-card="handleEmits" @click="infoCard(item.id, item.characterName)">
+      <Card v-for="item in shuffledCards" :key="item.id" :character-name="item.characterName"  :url-image="item.urlImage" @click="infoCard(item.id, item.characterName)" :matched="matched" @update-matched="handleEmit">
       </Card>
      
   </section>
@@ -72,6 +72,9 @@ const cards: CardData[] = [
 
 const shuffledCards = ref<CardData[]>([]);
 
+let firstCard = ref<{id:number; name: string}[]>([])
+let matched = ref<string>('nothing')
+
 onMounted(() => {
   shuffledCards.value = shuffledArray(cards)
 })
@@ -85,14 +88,23 @@ function shuffledArray(array: CardData[]): CardData[]{
   return shuffled
 }
 
-function handleEmits(isFlipped:boolean){
-  
+
+function infoCard(id:number, name: string): void{
+  firstCard.value.push({id, name})
+  if(firstCard.value.length === 2){
+    if(firstCard.value[0].name === firstCard.value[1].name && firstCard.value[0].id !== firstCard.value[1].id){
+      matched.value = 'true'
+    }
+    console.log(matched.value)
+    firstCard.value.splice(0, firstCard.value.length)
+    matched.value = 'false'
+    
+  } 
 }
-function infoCard(id:number, name: string){
-  console.log(id, name)
-  return {
-    id, name
-  }
+
+function handleEmit(nothing: string): void{
+  matched.value = nothing
+  console.log(matched.value)
 }
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-<div class="card">
+<div class="card" :class="{'matched': matched === 'true'}">
 		<div class="card__inner" :class="{'is-flipped': isFlipped}" @click="turnCard">
 			<div class="card__face card__face--front">
 				
@@ -14,25 +14,35 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, defineProps, defineEmits } from 'vue';
 
-const prop = defineProps({
+const props = defineProps({
     urlImage: {type: String, required: true},
     characterName: {type: String, required: true},
-    matched: {type: Boolean}
+    matched: {type: String, default: 'nothing'}
 })
-let isFlipped = ref<boolean>(false)
 
+
+let isFlipped = ref<boolean>(false)
+let points = ref<number>(0)
 const emit = defineEmits<{
-  clickedCard: [isFlipped: boolean]
+  clickedCard: [isFlipped: boolean],
+  updateMatched: [nothing: string]
 }>()
 
 function turnCard(){
     isFlipped.value = !isFlipped.value
     emit('clickedCard', isFlipped.value)
-    if(!prop.matched){
-      isFlipped.value = false
+    let divs = document.querySelectorAll('.is-flipped');
+    console.log(props.matched)
+    if (props.matched === 'false'){
+      divs.forEach(div => {
+      div.classList.remove('is-flipped');
+      })
+      emit('updateMatched', 'nothing')
     }
+
+    
 }
 </script>
 
@@ -56,7 +66,9 @@ function turnCard(){
   perspective: 1000px;
   
 }
-
+.matched{
+  display: none;
+}
 .card__inner {
   width: 100%;
   height: 100%;
